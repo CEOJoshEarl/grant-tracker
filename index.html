@@ -181,6 +181,20 @@ footer p{margin:0 0 8px;max-width:76ch}
   .stamp{order:3}
   .go{margin-left:0;width:100%;text-align:center}
 }
+
+/* embed mode: when this page is shown inside the community in a frame */
+:root.embedded .hd{padding:14px 16px 12px}
+:root.embedded .hd h1{font-size:21px;margin-bottom:2px}
+:root.embedded .hd p{display:none}
+:root.embedded .wrap{padding-bottom:28px}
+:root.embedded .tiles{margin-top:14px}
+:root.embedded .popout{
+  display:inline-flex;align-items:center;gap:6px;margin-left:auto;
+  border:1px solid var(--line);border-radius:999px;padding:7px 12px;
+  font:500 11.5px Inter,sans-serif;color:var(--dim);text-decoration:none;white-space:nowrap;
+}
+:root.embedded .popout:hover{color:var(--text);border-color:var(--line2);text-decoration:none}
+.popout{display:none}
 </style>
 </head>
 <body>
@@ -193,6 +207,7 @@ footer p{margin:0 0 8px;max-width:76ch}
     </div>
     <span class="stamp" id="stamp">verified 2026-10-07</span>
     <button class="themeBtn" id="themeBtn" type="button">Light</button>
+    <a class="popout" id="popout" href="https://ceojoshearl.github.io/grant-tracker/" target="_blank" rel="noopener noreferrer">Open full page</a>
   </div>
 </header>
 
@@ -380,6 +395,11 @@ let statuses = {};
 try { statuses = JSON.parse(localStorage.getItem(LS) || "{}") || {}; } catch(e){ statuses = {}; }
 function save(){ try { localStorage.setItem(LS, JSON.stringify(statuses)); } catch(e){} }
 
+// Inside a frame in the community, drop the oversized chrome so it reads as
+// part of the page rather than a website bolted into a box.
+if (new URLSearchParams(location.search).has("embed") || window.self !== window.top){
+  document.documentElement.classList.add("embedded");
+}
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
